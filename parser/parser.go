@@ -1,8 +1,6 @@
 package parser
 
-import (
-	"github.com/mrdhat/eth-txns/transaction"
-)
+import "github.com/mrdhat/eth-txns/entity"
 
 type Parser interface {
 	// last parsed block
@@ -10,7 +8,7 @@ type Parser interface {
 	// add address to observer
 	Subscribe(address string) bool
 	// list of inbound or outbound transactions for an address
-	GetTransactions(address string) []transaction.Transaction
+	GetTransactions(address string) []entity.TransactionEntity
 }
 
 type parser struct {
@@ -24,7 +22,7 @@ func (p *parser) Subscribe(address string) bool {
 	return false
 }
 
-func (p *parser) GetTransactions(address string) []transaction.Transaction {
+func (p *parser) GetTransactions(address string) []entity.TransactionEntity {
 	return nil
 }
 
