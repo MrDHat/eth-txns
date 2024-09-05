@@ -3,6 +3,7 @@ package store_test
 import (
 	"testing"
 
+	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/errors"
 	"github.com/mrdhat/eth-txns/store"
 	"github.com/stretchr/testify/assert"
@@ -18,12 +19,12 @@ func TestAddressSubscriptionStore_Save(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		subscription store.AddressSubscription
+		subscription entity.AddressSubscription
 		wantErr      error
 	}{
 		{
 			name: "Save valid subscription",
-			subscription: store.AddressSubscription{
+			subscription: entity.AddressSubscription{
 				Address:  "0x1234567890123456789012345678901234567890",
 				IsActive: true,
 			},
@@ -43,7 +44,7 @@ func TestAddressSubscriptionStore_GetStatus(t *testing.T) {
 	s := store.NewAddressSubscriptionStore(store.StoreTypeMemory)
 
 	// Save a test subscription
-	testSubscription := store.AddressSubscription{
+	testSubscription := entity.AddressSubscription{
 		Address:  "0x1234567890123456789012345678901234567890",
 		IsActive: true,
 	}
@@ -83,7 +84,7 @@ func TestAddressSubscriptionStore_UnsupportedStoreType(t *testing.T) {
 	s := store.NewAddressSubscriptionStore(store.StoreType("unsupported"))
 
 	t.Run("Save with unsupported store type", func(t *testing.T) {
-		err := s.Save(store.AddressSubscription{})
+		err := s.Save(entity.AddressSubscription{})
 		assert.Equal(t, errors.ErrStoreTypeNotSupported, err)
 	})
 

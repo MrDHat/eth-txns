@@ -1,23 +1,21 @@
 package store
 
-import "github.com/mrdhat/eth-txns/errors"
-
-type AddressSubscription struct {
-	Address  string
-	IsActive bool
-}
+import (
+	"github.com/mrdhat/eth-txns/entity"
+	"github.com/mrdhat/eth-txns/errors"
+)
 
 type AddressSubscriptionStore interface {
-	Save(subscription AddressSubscription) error
+	Save(subscription entity.AddressSubscription) error
 	GetStatus(address string) (bool, error)
 }
 
 type addressSubscriptionStore struct {
 	baseStore
-	subscriptions map[string]AddressSubscription
+	subscriptions entity.AddressSubscriptionEntity
 }
 
-func (s *addressSubscriptionStore) Save(subscription AddressSubscription) error {
+func (s *addressSubscriptionStore) Save(subscription entity.AddressSubscription) error {
 	switch s.storeType {
 	case StoreTypeMemory:
 		s.subscriptions[subscription.Address] = subscription
@@ -45,6 +43,6 @@ func NewAddressSubscriptionStore(storeType StoreType) AddressSubscriptionStore {
 		baseStore: baseStore{
 			storeType: storeType,
 		},
-		subscriptions: make(map[string]AddressSubscription),
+		subscriptions: make(entity.AddressSubscriptionEntity),
 	}
 }

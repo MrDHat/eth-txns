@@ -1,28 +1,21 @@
 package store
 
 import (
-	"time"
-
+	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/errors"
 )
 
 type BlockStore interface {
-	Save(block Block) error
-	GetLatest() (*Block, error)
-}
-
-type Block struct {
-	Number    int
-	Hash      string
-	Timestamp time.Time
+	Save(block entity.BlockEntity) error
+	GetLatest() (*entity.BlockEntity, error)
 }
 
 type blockStore struct {
 	baseStore
-	blocks []Block
+	blocks []entity.BlockEntity
 }
 
-func (b *blockStore) Save(block Block) error {
+func (b *blockStore) Save(block entity.BlockEntity) error {
 	switch b.storeType {
 	case StoreTypeMemory:
 		b.blocks = append(b.blocks, block)
@@ -32,7 +25,7 @@ func (b *blockStore) Save(block Block) error {
 	}
 }
 
-func (b *blockStore) GetLatest() (*Block, error) {
+func (b *blockStore) GetLatest() (*entity.BlockEntity, error) {
 	switch b.storeType {
 	case StoreTypeMemory:
 		if len(b.blocks) == 0 {

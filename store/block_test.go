@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/errors"
 	"github.com/mrdhat/eth-txns/store"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +18,7 @@ func TestNewBlockStore(t *testing.T) {
 func TestSaveBlock(t *testing.T) {
 	bs := store.NewBlockStore(store.StoreTypeMemory)
 
-	block := store.Block{
+	block := entity.BlockEntity{
 		Number:    1,
 		Hash:      "0x123",
 		Timestamp: time.Now(),
@@ -41,7 +42,7 @@ func TestGetLatestBlock(t *testing.T) {
 	assert.Nil(t, latestBlock, "GetLatestBlock should return nil for empty store")
 
 	// Add blocks and test
-	blocks := []store.Block{
+	blocks := []entity.BlockEntity{
 		{Number: 1, Hash: "0x123", Timestamp: time.Now()},
 		{Number: 2, Hash: "0x456", Timestamp: time.Now()},
 		{Number: 3, Hash: "0x789", Timestamp: time.Now()},
