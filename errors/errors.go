@@ -5,6 +5,7 @@ import "errors"
 type Error error
 
 var (
-	ErrStoreTypeNotSupported = errors.New("store type not supported")
-	ErrInvalidHexValue       = errors.New("invalid hex value")
+	ErrStoreTypeNotSupported  = errors.New("store type not supported")
+	ErrInvalidHexValue        = errors.New("invalid hex value")
+	ErrFailedToGetLatestBlock = errors.New("failed to get the latest block")
 )

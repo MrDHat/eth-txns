@@ -3,6 +3,7 @@ package jsonrpc
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -21,6 +22,10 @@ type response struct {
 	JSONRPC string      `json:"jsonrpc"`
 	Result  interface{} `json:"result"`
 	ID      int         `json:"id"`
+	Error   struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+	} `json:"error"`
 }
 
 type jsonRPCClient struct {
@@ -52,6 +57,12 @@ func (j *jsonRPCClient) MakeRequest(method string, params []interface{}) (interf
 	err = json.NewDecoder(resp.Body).Decode(&respBody)
 	if err != nil {
 		return nil, err
+	}
+
+	if respBody.Error.Code != 0 {
+		// For now, we chose not to bubble up errors for the sake of simplicity
+		fmt.Println("JSONRPC ERROR: ", respBody.Error.Message, " for ", method, params)
+		return nil, nil
 	}
 
 	return respBody.Result, nil

@@ -1,6 +1,8 @@
 package store
 
 import (
+	"fmt"
+
 	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/errors"
 )
@@ -18,6 +20,7 @@ type blockStore struct {
 func (b *blockStore) Save(block entity.BlockEntity) error {
 	switch b.storeType {
 	case StoreTypeMemory:
+		fmt.Println("Saving block: ", block)
 		b.blocks = append(b.blocks, block)
 		return nil
 	default:

@@ -8,10 +8,11 @@ import (
 )
 
 type blockchainTransaction struct {
-	Hash  string `json:"hash"`
-	From  string `json:"from"`
-	To    string `json:"to"`
-	Value string `json:"value"`
+	Hash      string `json:"hash"`
+	From      string `json:"from"`
+	To        string `json:"to"`
+	Value     string `json:"value"`
+	Timestamp string `json:"timestamp"`
 }
 
 type blockchainBlock struct {
