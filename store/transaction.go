@@ -1,10 +1,9 @@
 package store
 
 import (
-	"fmt"
-
 	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/errors"
+	"github.com/mrdhat/eth-txns/logger"
 )
 
 type TransactionStore interface {
@@ -33,11 +32,11 @@ func (t *transactionStore) Save(transactions []entity.TransactionEntity) error {
 			}
 
 			if isFromSubscribed {
-				fmt.Println("Saving a transaction from: ", transaction.From)
+				logger.Log("Saving a transaction from: ", transaction.From)
 				t.transactions[transaction.From] = append(t.transactions[transaction.From], transaction)
 			}
 			if isToSubscribed {
-				fmt.Println("Saving a transaction to: ", transaction.To)
+				logger.Log("Saving a transaction to: ", transaction.To)
 				t.transactions[transaction.To] = append(t.transactions[transaction.To], transaction)
 			}
 		}

@@ -1,18 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/mrdhat/eth-txns/config"
 	"github.com/mrdhat/eth-txns/entity"
 	"github.com/mrdhat/eth-txns/jsonrpc"
+	"github.com/mrdhat/eth-txns/logger"
 	"github.com/mrdhat/eth-txns/node"
 	"github.com/mrdhat/eth-txns/store"
 )
 
 func main() {
+	addressesToSubscribe := os.Args[1:]
+	if len(addressesToSubscribe) == 0 {
+		logger.Log("No addresses to subscribe")
+		logger.Log("Usage: go run main.go <address1> <address2> <address3> ...")
+		os.Exit(1)
+	}
+
 	configData := config.NewConfig()
 
 	rpcClient := jsonrpc.NewJSONRPCClient(configData.NodeRPCUrl, &http.Client{})
@@ -21,28 +29,26 @@ func main() {
 	addressSubscriptionStore := store.NewAddressSubscriptionStore(store.StoreTypeMemory)
 	transactionStore := store.NewTransactionStore(store.StoreTypeMemory, addressSubscriptionStore)
 
-	addresses := []string{"0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5", "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97", "0x8E1fDdf3b59BeA59a3B963Cc38719eb1dc7b6ee2"}
-
-	for _, address := range addresses {
+	for _, address := range addressesToSubscribe {
 		addressSubscriptionStore.Save(entity.AddressSubscription{Address: address, IsActive: true})
 	}
 
 	listener := node.NewListener(configData.BlockDuration, rpcClient, blockStore, transactionStore)
 
-	fmt.Println("Starting listener")
+	logger.Log("Starting listener")
 	stop := make(chan bool)
 
 	// TODO: stop on signal
 	go func() {
 		time.Sleep(50 * time.Second)
-		fmt.Println("Stopping listener")
+		logger.Log("Stopping listener")
 		transactions := transactionStore.GetAll()
-		fmt.Println("Transactions: ", transactions)
+		logger.Log("Transactions: ", transactions)
 		stop <- true
 	}()
 
 	err := listener.Start(stop)
 	if err != nil {
-		fmt.Println("Listener stopped: ", err)
+		logger.Log("Listener stopped: ", err)
 	}
 }

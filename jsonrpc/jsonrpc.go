@@ -3,8 +3,9 @@ package jsonrpc
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
+
+	"github.com/mrdhat/eth-txns/logger"
 )
 
 type Client interface {
@@ -61,7 +62,7 @@ func (j *jsonRPCClient) MakeRequest(method string, params []interface{}) (interf
 
 	if respBody.Error.Code != 0 {
 		// For now, we chose not to bubble up errors for the sake of simplicity
-		fmt.Println("JSONRPC ERROR: ", respBody.Error.Message, " for ", method, params)
+		logger.Log("JSONRPC ERROR: ", respBody.Error.Message, " for ", method, params)
 		return nil, nil
 	}
 

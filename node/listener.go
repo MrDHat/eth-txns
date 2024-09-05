@@ -7,6 +7,7 @@ import (
 	"github.com/mrdhat/eth-txns/errors"
 	"github.com/mrdhat/eth-txns/helpers"
 	"github.com/mrdhat/eth-txns/jsonrpc"
+	"github.com/mrdhat/eth-txns/logger"
 	"github.com/mrdhat/eth-txns/store"
 )
 
@@ -46,7 +47,7 @@ func (l *listener) Start(stop <-chan bool) error {
 			}
 
 			if block == nil {
-				fmt.Println("empty block")
+				logger.Log("empty block")
 			} else {
 				// Save the entities to the database
 				blockEntity, transactionEntities, err := block.ToStoreEntities()
@@ -108,7 +109,7 @@ func (l *listener) readBlock(number string) (*blockchainBlock, error) {
 	transactions := blockDataRes["transactions"].([]interface{})
 	blockchainTransactions := make([]blockchainTransaction, len(transactions))
 
-	fmt.Printf("Found %v transactions for block %v: ", len(transactions), blockDataRes["number"])
+	logger.Log(fmt.Sprintf("Found %v transactions for block %v: ", len(transactions), blockDataRes["number"]))
 
 	for i, transaction := range transactions {
 		transactionMap := transaction.(map[string]interface{})
