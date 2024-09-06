@@ -45,7 +45,12 @@ func (m *MockTransactionStore) Save(transactions []entity.TransactionEntity) err
 	return args.Error(0)
 }
 
-func (m *MockTransactionStore) GetAllByAddress(address string) []entity.TransactionEntity {
+func (m *MockTransactionStore) GetAllByAddress(address string) ([]entity.TransactionEntity, error) {
 	args := m.Called(address)
-	return args.Get(0).([]entity.TransactionEntity)
+	return args.Get(0).([]entity.TransactionEntity), args.Error(1)
+}
+
+func (m *MockTransactionStore) GetAll() entity.AddressTransactions {
+	args := m.Called()
+	return args.Get(0).(entity.AddressTransactions)
 }

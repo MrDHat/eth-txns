@@ -1,12 +1,21 @@
 package mocks
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+)
 
-type MockRPCClient struct {
+// MockJSONRPCClient is a mock of the Client interface
+type MockJSONRPCClient struct {
 	mock.Mock
 }
 
-func (m *MockRPCClient) MakeRequest(method string, params []interface{}) (interface{}, error) {
+// MakeRequest mocks the MakeRequest method
+func (m *MockJSONRPCClient) MakeRequest(method string, params []interface{}) (interface{}, error) {
 	args := m.Called(method, params)
 	return args.Get(0), args.Error(1)
+}
+
+// NewMockJSONRPCClient creates a new instance of MockJSONRPCClient
+func NewMockJSONRPCClient() *MockJSONRPCClient {
+	return &MockJSONRPCClient{}
 }
