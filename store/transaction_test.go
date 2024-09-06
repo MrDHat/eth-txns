@@ -65,7 +65,8 @@ func TestTransactionStore_GetAllByAddress(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := store.GetAllByAddress(tt.address)
+			result, err := store.GetAllByAddress(tt.address)
+			assert.NoError(t, err)
 			assert.Len(t, result, tt.want)
 		})
 	}
@@ -88,6 +89,8 @@ func TestTransactionStore_GetAllByAddressUnsupportedStore(t *testing.T) {
 	addressSubscriptionStore := NewAddressSubscriptionStore(StoreTypeMemory)
 	store := NewTransactionStore(StoreType("unsupported"), addressSubscriptionStore)
 
-	result := store.GetAllByAddress("0x1")
+	result, err := store.GetAllByAddress("0x1")
 	assert.Nil(t, result)
+	assert.Error(t, err)
+	assert.Equal(t, errors.ErrStoreTypeNotSupported, err)
 }

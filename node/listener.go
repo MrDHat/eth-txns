@@ -73,6 +73,7 @@ func (l *listener) Start(stop <-chan bool) error {
 				// update the latest block
 				blockNumberToRead = helpers.ConvertPositiveDecimalToHex(currBlockNumber + 1)
 
+				logger.Log(fmt.Sprintf("Saved block %v", blockNumberToRead))
 			}
 
 			// sleep for the duration of the block
@@ -113,6 +114,10 @@ func (l *listener) readBlock(number string) (*blockchainBlock, error) {
 
 	for i, transaction := range transactions {
 		transactionMap := transaction.(map[string]interface{})
+		if transactionMap["to"] == nil || transactionMap["from"] == nil {
+			// This is a contract creation transaction
+			continue
+		}
 		blockchainTransactions[i] = blockchainTransaction{
 			Hash:      transactionMap["hash"].(string),
 			From:      transactionMap["from"].(string),

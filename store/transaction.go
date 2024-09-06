@@ -8,7 +8,7 @@ import (
 
 type TransactionStore interface {
 	Save(transactions []entity.TransactionEntity) error
-	GetAllByAddress(address string) []entity.TransactionEntity
+	GetAllByAddress(address string) ([]entity.TransactionEntity, error)
 	GetAll() entity.AddressTransactions
 }
 
@@ -46,16 +46,16 @@ func (t *transactionStore) Save(transactions []entity.TransactionEntity) error {
 	}
 }
 
-func (t *transactionStore) GetAllByAddress(address string) []entity.TransactionEntity {
+func (t *transactionStore) GetAllByAddress(address string) ([]entity.TransactionEntity, error) {
 	switch t.storeType {
 	case StoreTypeMemory:
 		txns, ok := t.transactions[address]
 		if !ok {
-			return nil
+			return nil, errors.ErrAddressNotFound
 		}
-		return txns
+		return txns, nil
 	default:
-		return nil
+		return nil, errors.ErrStoreTypeNotSupported
 	}
 }
 
